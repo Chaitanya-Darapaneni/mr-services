@@ -53,28 +53,18 @@ public class MRConfiguration {
     private String idGenPath;
 
     @Value("${egov.idgen.mr.applicationNum.name}")
-    private String applicationNumberIdgenNameTL;
+    private String applicationNumberIdgenNameMR;
 
     @Value("${egov.idgen.mr.applicationNum.format}")
-    private String applicationNumberIdgenFormatTL;
+    private String applicationNumberIdgenFormatMR;
 
     @Value("${egov.idgen.mr.licensenumber.name}")
-    private String licenseNumberIdgenNameTL;
+    private String mrNumberIdgenNameMR;
 
     @Value("${egov.idgen.mr.licensenumber.format}")
-    private String licenseNumberIdgenFormatTL;
+    private String mrNumberIdgenFormatMR;
 
-    @Value("${egov.idgen.bpa.applicationNum.name}")
-    private String applicationNumberIdgenNameBPA;
-
-    @Value("${egov.idgen.bpa.applicationNum.format}")
-    private String applicationNumberIdgenFormatBPA;
-
-    @Value("${egov.idgen.bpa.licensenumber.name}")
-    private String licenseNumberIdgenNameBPA;
-
-    @Value("${egov.idgen.bpa.licensenumber.format}")
-    private String licenseNumberIdgenFormatBPA;
+  
 
     //Persister Config
     @Value("${persister.save.tradelicense.topic}")

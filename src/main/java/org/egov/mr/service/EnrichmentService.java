@@ -5,6 +5,7 @@ import org.egov.mr.config.MRConfiguration;
 import org.egov.mr.repository.IdGenRepository;
 import org.egov.mr.util.MarriageRegistrationUtil;
 import org.egov.mr.web.models.AuditDetails;
+import org.egov.mr.web.models.MarriageRegistration;
 import org.egov.mr.web.models.MarriageRegistrationRequest;
 import org.egov.mr.web.models.Idgen.IdResponse;
 import org.egov.mr.workflow.WorkflowService;
@@ -66,37 +67,22 @@ public class EnrichmentService {
           
 
             
-            
-
-            marriageRegistration.getTradeLicenseDetail().getOwners().forEach(owner -> {
-                owner.setUserActive(true);
-                if (!CollectionUtils.isEmpty(owner.getDocuments()))
-                    owner.getDocuments().forEach(document -> {
-                        document.setId(UUID.randomUUID().toString());
-                        document.setActive(true);
-                    });
-            });
-
-            if (marriageRegistration.getTradeLicenseDetail().getSubOwnerShipCategory().contains(config.getInstitutional())) {
-                marriageRegistration.getTradeLicenseDetail().getInstitution().setId(UUID.randomUUID().toString());
-                marriageRegistration.getTradeLicenseDetail().getInstitution().setActive(true);
-                marriageRegistration.getTradeLicenseDetail().getInstitution().setTenantId(marriageRegistration.getTenantId());
-                marriageRegistration.getTradeLicenseDetail().getOwners().forEach(owner -> {
-                    owner.setInstitutionId(tradeLicense.getTradeLicenseDetail().getInstitution().getId());
-                });
-            }
+     
 
             if (requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN"))
                 marriageRegistration.setAccountId(requestInfo.getUserInfo().getUuid());
 
         });
+        
+        
+        
         setIdgenIds(marriageRegistrationRequest);
         setStatusForCreate(marriageRegistrationRequest);
-        String businessService = marriageRegistrationRequest.getLicenses().isEmpty()?null:marriageRegistrationRequest.getLicenses().get(0).getBusinessService();
+        String businessService = marriageRegistrationRequest.getMarriageRegistrations().isEmpty()?null:marriageRegistrationRequest.getMarriageRegistrations().get(0).getBusinessService();
         if (businessService == null)
-            businessService = businessService_TL;
+            businessService = businessService_MR;
         switch (businessService) {
-            case businessService_TL:
+            case businessService_MR:
                 boundaryService.getAreaType(marriageRegistrationRequest, config.getHierarchyTypeCode());
                 break;
         }
@@ -130,34 +116,31 @@ public class EnrichmentService {
      *
      * @param request TradeLicenseRequest which is to be created
      */
-    private void setIdgenIds(TradeLicenseRequest request) {
+    private void setIdgenIds(MarriageRegistrationRequest request) {
         RequestInfo requestInfo = request.getRequestInfo();
-        String tenantId = request.getLicenses().get(0).getTenantId();
-        List<TradeLicense> licenses = request.getLicenses();
-        String businessService = licenses.isEmpty() ? null : licenses.get(0).getBusinessService();
+        String tenantId = request.getMarriageRegistrations().get(0).getTenantId();
+        List<MarriageRegistration> marriageRegistrations = request.getMarriageRegistrations();
+        String businessService = marriageRegistrations.isEmpty() ? null : marriageRegistrations.get(0).getBusinessService();
         if (businessService == null)
-            businessService = businessService_TL;
+            businessService = businessService_MR;
         List<String> applicationNumbers = null;
         switch (businessService) {
-            case businessService_TL:
-                applicationNumbers = getIdList(requestInfo, tenantId, config.getApplicationNumberIdgenNameTL(), config.getApplicationNumberIdgenFormatTL(), request.getLicenses().size());
+            case businessService_MR:
+                applicationNumbers = getIdList(requestInfo, tenantId, config.getApplicationNumberIdgenNameMR(), config.getApplicationNumberIdgenFormatMR(), request.getMarriageRegistrations().size());
                 break;
 
-            case businessService_BPA:
-                applicationNumbers = getIdList(requestInfo, tenantId, config.getApplicationNumberIdgenNameBPA(), config.getApplicationNumberIdgenFormatBPA(), request.getLicenses().size());
-                break;
         }
         ListIterator<String> itr = applicationNumbers.listIterator();
 
         Map<String, String> errorMap = new HashMap<>();
-        if (applicationNumbers.size() != request.getLicenses().size()) {
+        if (applicationNumbers.size() != request.getMarriageRegistrations().size()) {
             errorMap.put("IDGEN ERROR ", "The number of LicenseNumber returned by idgen is not equal to number of TradeLicenses");
         }
 
         if (!errorMap.isEmpty())
             throw new CustomException(errorMap);
 
-        licenses.forEach(tradeLicense -> {
+        marriageRegistrations.forEach(tradeLicense -> {
             tradeLicense.setApplicationNumber(itr.next());
         });
     }
@@ -287,24 +270,22 @@ public class EnrichmentService {
 
     /**
      * Sets status for create request
-     * @param tradeLicenseRequest The create request
+     * @param marriageRegistrationRequest The create request
      */
-    private void setStatusForCreate(TradeLicenseRequest tradeLicenseRequest) {
-        tradeLicenseRequest.getLicenses().forEach(license -> {
-            String businessService = tradeLicenseRequest.getLicenses().isEmpty()?null:tradeLicenseRequest.getLicenses().get(0).getBusinessService();
+    private void setStatusForCreate(MarriageRegistrationRequest marriageRegistrationRequest) {
+        marriageRegistrationRequest.getMarriageRegistrations().forEach(marriageRegistration -> {
+            String businessService = marriageRegistrationRequest.getMarriageRegistrations().isEmpty()?null:marriageRegistrationRequest.getMarriageRegistrations().get(0).getBusinessService();
             if (businessService == null)
-                businessService = businessService_TL;
+                businessService = businessService_MR;
             switch (businessService) {
-                case businessService_TL:
-                    if (license.getAction().equalsIgnoreCase(ACTION_INITIATE))
-                        license.setStatus(STATUS_INITIATED);
-                    if (license.getAction().equalsIgnoreCase(ACTION_APPLY))
-                        license.setStatus(STATUS_APPLIED);
+                case businessService_MR:
+                    if (marriageRegistration.getAction().equalsIgnoreCase(ACTION_INITIATE))
+                        marriageRegistration.setStatus(STATUS_INITIATED);
+                    if (marriageRegistration.getAction().equalsIgnoreCase(ACTION_APPLY))
+                        marriageRegistration.setStatus(STATUS_APPLIED);
                     break;
 
-                case businessService_BPA:
-                    license.setStatus(STATUS_INITIATED);
-                    break;
+                
             }
         });
     }
