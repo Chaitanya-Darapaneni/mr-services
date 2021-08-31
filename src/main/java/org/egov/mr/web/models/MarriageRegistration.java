@@ -1,5 +1,7 @@
 package org.egov.mr.web.models;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -46,14 +48,6 @@ public class MarriageRegistration {
     @JsonProperty("applicationNumber")
     private String applicationNumber;
     
-    @Size(max=64)
-    @JsonProperty("oldReferenceId")
-    private String oldReferenceId;
-    
-    @Size(max=64)
-    @JsonProperty("oldApplicationNumber")
-    private String oldApplicationNumber;
-    
     
     @JsonProperty("applicationDate")
     private Long applicationDate = null;
@@ -80,7 +74,15 @@ public class MarriageRegistration {
 
     @Valid
     @NotNull
-    @JsonProperty("marriageRegistrationDetail")
-    private MarriageRegistrationDetail marriageRegistrationDetail = null;
+    @JsonProperty("marriagePlace")
+    private MarriagePlace marriagePlace = null;
+    
+	  @JsonProperty("applicationDocuments")
+      @Valid
+      private List<Document> applicationDocuments = null;
+	  
+	  @JsonProperty("coupleDetails")
+      @Valid
+      private List<Couple> coupleDetails = null;
     
 }
