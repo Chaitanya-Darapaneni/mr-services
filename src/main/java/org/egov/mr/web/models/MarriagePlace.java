@@ -1,10 +1,7 @@
 package org.egov.mr.web.models;
 
-import java.util.List;
-
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
-
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -35,6 +32,11 @@ public class MarriagePlace {
 	@Size(max=64)
     @JsonProperty("placeOfMarriage")
     private String placeOfMarriage = null;
+	
+	@Valid
+    @JsonProperty("locality")
+    private Boundary locality = null;
+	
 	
 	@JsonProperty("additionalDetail")
     private JsonNode additionalDetail = null;

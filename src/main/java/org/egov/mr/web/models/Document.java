@@ -46,6 +46,9 @@ public class Document   {
         @JsonProperty("fileStoreId")
         private String fileStoreId = null;
 
+        @Size(max=64)
+        @JsonProperty("documentUid")
+        private String documentUid;
 
         @JsonProperty("auditDetails")
         private AuditDetails auditDetails = null;

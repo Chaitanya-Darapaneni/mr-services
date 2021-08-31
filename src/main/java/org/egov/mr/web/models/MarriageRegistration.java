@@ -11,11 +11,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -66,6 +68,10 @@ public class MarriageRegistration {
     @Size(max=64)
     @JsonProperty("status")
     private String status = null;
+    
+    @Valid
+    @JsonProperty("wfDocuments")
+    private List<Document> wfDocuments;
 
 
     @JsonProperty("auditDetails")
@@ -84,5 +90,11 @@ public class MarriageRegistration {
 	  @JsonProperty("coupleDetails")
       @Valid
       private List<Couple> coupleDetails = null;
+	  
+	  @JsonProperty("assignee")
+      private List<String> assignee = null;
+	  
+	  @Size(max=128)
+      private String comment;
     
 }
