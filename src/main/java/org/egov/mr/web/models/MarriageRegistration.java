@@ -4,7 +4,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.egov.tl.web.models.TradeLicenseDetail;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
