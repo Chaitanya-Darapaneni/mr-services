@@ -35,8 +35,6 @@ public class MRValidator {
             }
         }
     
-	
-	
 	}
 
 	public void validateCreate(MarriageRegistrationRequest marriageRegistrationRequest) {
