@@ -77,11 +77,11 @@ public class MarriageRegistration {
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;
     
-
-    @Valid
-    @NotNull
+    
     @JsonProperty("marriagePlace")
-    private MarriagePlace marriagePlace = null;
+    @Valid
+    private MarriagePlace  marriagePlace ; 
+    
     
 	  @JsonProperty("applicationDocuments")
       @Valid

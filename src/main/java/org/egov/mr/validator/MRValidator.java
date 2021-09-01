@@ -2,7 +2,9 @@ package org.egov.mr.validator;
 
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -35,6 +37,61 @@ public class MRValidator {
     
 	
 	
+	}
+
+	public void validateCreate(MarriageRegistrationRequest marriageRegistrationRequest) {
+        List<MarriageRegistration> marriageRegistrations = marriageRegistrationRequest.getMarriageRegistrations();
+        String businessService = marriageRegistrationRequest.getMarriageRegistrations().isEmpty()?null:request.getMarriageRegistrations().get(0).getBusinessService();
+        
+        if (businessService == null)
+            businessService = businessService_MR;
+        switch (businessService) {
+            case businessService_MR:
+                validateMRSpecificNotNullFields(marriageRegistrationRequest);
+                break;
+
+        }
+        mdmsValidator.validateMdmsData(request, mdmsData);
+        validateInstitution(request);
+        validateDuplicateDocuments(request);
+    }
+
+	private void validateMRSpecificNotNullFields(MarriageRegistrationRequest marriageRegistrationRequest) {
+		
+		marriageRegistrationRequest.getMarriageRegistrations().forEach(marriageRegistration -> {
+			
+			 Map<String, String> errorMap = new HashMap<>();
+			
+			if(marriageRegistration.getMarriageDate() == null)
+				errorMap.put("NULL_MARRIAGEDATE", " Marriage Date cannot be null");
+			
+			if(marriageRegistration.getMarriagePlace().getWard() == null)
+				errorMap.put("NULL_WARD", " Ward cannot be null");
+		
+			if(marriageRegistration.getMarriagePlace().getPlaceOfMarriage() == null)
+				errorMap.put("NULL_MARRIAGEPLACE", " Marriage Place  cannot be null");
+			
+			if(marriageRegistration.getMarriagePlace().getLocality().getCode() == null)	
+				errorMap.put("NULL_LOCALITY", " Locality  cannot be null");
+
+			if(marriageRegistration.getTenantId() == null)
+				errorMap.put("NULL_TENANTID", " Tenant id cannot be null");
+			
+			if(marriageRegistration.getCoupleDetails()==null)
+				errorMap.put("COUPLE_DETAILS_ERROR", " Couple Details are mandatory  ");
+			
+			if(marriageRegistration.getCoupleDetails().size()!=2)
+				errorMap.put("COUPLE_DETAILS_ERROR", " Both the Bride and Groom details should be provided .");
+			
+			
+			
+			
+			
+			if (!errorMap.isEmpty())
+                throw new CustomException(errorMap);
+			
+		});
+		
 	}
 
 }

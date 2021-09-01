@@ -9,7 +9,7 @@ import javax.validation.Valid;
 import org.egov.mr.validator.MRValidator;
 import org.egov.mr.web.models.MarriageRegistration;
 import org.egov.mr.web.models.MarriageRegistrationRequest;
-import org.egov.tl.service.EnrichmentService;
+import org.egov.mr.service.EnrichmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -35,7 +35,7 @@ public class MarriageRegistrationService {
 		
 		mrValidator.validateBusinessService(marriageRegistrationRequest,businessServicefromPath);
 		enrichmentService.enrichMRCreateRequest(marriageRegistrationRequest);
-	       tlValidator.validateCreate(tradeLicenseRequest, mdmsData);
+	       mrValidator.validateCreate(marriageRegistrationRequest);
 		
 		return null;
 	}
