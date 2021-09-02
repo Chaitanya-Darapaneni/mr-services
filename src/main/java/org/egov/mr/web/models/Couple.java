@@ -73,5 +73,8 @@ public class Couple {
     
     @JsonProperty("coupleAddress")
     private CoupleAddress coupleAddress = null ;
+    
+    @JsonProperty("guardianDetails")
+    private GuardianDetails guardianDetails = null ;
 
 }

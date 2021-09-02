@@ -64,8 +64,8 @@ public class Witness {
     private String district = null;
 
     @Size(max=64)
-    @JsonProperty("pincode")
-    private String pincode = null;
+    @JsonProperty("pinCode")
+    private String pinCode = null;
     
     @Pattern(regexp = "^[6-9][0-9]{9}$", message = "Invalid mobile number")
     @JsonProperty("contact")

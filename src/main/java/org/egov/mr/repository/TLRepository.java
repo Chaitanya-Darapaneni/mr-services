@@ -30,14 +30,14 @@ public class TLRepository {
 
     private Producer producer;
 
-    private TLConfiguration config;
+    private MRConfiguration config;
 
     private WorkflowService workflowService;
 
 
     @Autowired
     public TLRepository(JdbcTemplate jdbcTemplate, TLQueryBuilder queryBuilder, TLRowMapper rowMapper,
-                        Producer producer, TLConfiguration config, WorkflowService workflowService) {
+                        Producer producer, MRConfiguration config, WorkflowService workflowService) {
         this.jdbcTemplate = jdbcTemplate;
         this.queryBuilder = queryBuilder;
         this.rowMapper = rowMapper;

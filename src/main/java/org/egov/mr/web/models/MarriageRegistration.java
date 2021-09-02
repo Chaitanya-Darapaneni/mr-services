@@ -87,9 +87,17 @@ public class MarriageRegistration {
       @Valid
       private List<Document> applicationDocuments = null;
 	  
+      @JsonProperty("verificationDocuments")
+      @Valid
+      private List<Document> verificationDocuments = null;
+	  
 	  @JsonProperty("coupleDetails")
       @Valid
       private List<Couple> coupleDetails = null;
+	  
+	  @JsonProperty("witness")
+      @Valid
+	  private List<Witness> witness = null ;
 	  
 	  @JsonProperty("assignee")
       private List<String> assignee = null;

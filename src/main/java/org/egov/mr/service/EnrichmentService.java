@@ -66,9 +66,6 @@ public class EnrichmentService {
             });
           
 
-            
-     
-
             if (requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN"))
                 marriageRegistration.setAccountId(requestInfo.getUserInfo().getUuid());
 

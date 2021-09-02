@@ -55,8 +55,8 @@ public class CoupleAddress   {
         private String district = null;
 
         @Size(max=64)
-        @JsonProperty("pincode")
-        private String pincode = null;
+        @JsonProperty("pinCode")
+        private String pinCode = null;
 
         
 

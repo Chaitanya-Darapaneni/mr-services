@@ -39,7 +39,7 @@ public class MRValidator {
 
 	public void validateCreate(MarriageRegistrationRequest marriageRegistrationRequest) {
         List<MarriageRegistration> marriageRegistrations = marriageRegistrationRequest.getMarriageRegistrations();
-        String businessService = marriageRegistrationRequest.getMarriageRegistrations().isEmpty()?null:request.getMarriageRegistrations().get(0).getBusinessService();
+        String businessService = marriageRegistrationRequest.getMarriageRegistrations().isEmpty()?null:marriageRegistrationRequest.getMarriageRegistrations().get(0).getBusinessService();
         
         if (businessService == null)
             businessService = businessService_MR;
@@ -49,9 +49,8 @@ public class MRValidator {
                 break;
 
         }
-        mdmsValidator.validateMdmsData(request, mdmsData);
-        validateInstitution(request);
-        validateDuplicateDocuments(request);
+       
+
     }
 
 	private void validateMRSpecificNotNullFields(MarriageRegistrationRequest marriageRegistrationRequest) {
