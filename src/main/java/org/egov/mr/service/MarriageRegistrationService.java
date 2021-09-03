@@ -24,10 +24,11 @@ import org.egov.mr.workflow.WorkflowIntegrator;
 import org.egov.mr.workflow.WorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Service;
 
 
 
-
+@Service
 public class MarriageRegistrationService {
 	
 	

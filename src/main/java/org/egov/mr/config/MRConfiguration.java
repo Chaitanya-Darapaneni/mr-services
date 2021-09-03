@@ -58,10 +58,10 @@ public class MRConfiguration {
     @Value("${egov.idgen.mr.applicationNum.format}")
     private String applicationNumberIdgenFormatMR;
 
-    @Value("${egov.idgen.mr.licensenumber.name}")
+    @Value("${egov.idgen.mr.mrnumber.name}")
     private String mrNumberIdgenNameMR;
 
-    @Value("${egov.idgen.mr.licensenumber.format}")
+    @Value("${egov.idgen.mr.mrnumber.format}")
     private String mrNumberIdgenFormatMR;
 
   

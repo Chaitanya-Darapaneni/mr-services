@@ -65,8 +65,7 @@ public class WorkflowIntegrator {
 
 	private MRConfiguration config;
 
-	@Value("${workflow.bpa.businessServiceCode.fallback_enabled}")
-	private Boolean pickWFServiceNameFromTradeTypeOnly;
+
 
 	@Autowired
 	public WorkflowIntegrator(RestTemplate rest, MRConfiguration config) {

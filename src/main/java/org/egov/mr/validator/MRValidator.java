@@ -14,11 +14,12 @@ import org.egov.mr.web.models.MarriageRegistration;
 import org.egov.mr.web.models.MarriageRegistrationRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import static org.egov.mr.util.MRConstants.businessService_MR;
 
-
+@Component
 public class MRValidator {
 	
 	@Value("${egov.allowed.businessServices}")
