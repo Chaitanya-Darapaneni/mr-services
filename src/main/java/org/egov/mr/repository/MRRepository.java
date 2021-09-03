@@ -53,7 +53,7 @@ public class MRRepository {
 
 
 
-    public List<MarriageRegistration> getLicenses(MarriageRegistrationSearchCriteria criteria) {
+    public List<MarriageRegistration> getMarriageRegistartions(MarriageRegistrationSearchCriteria criteria) {
         List<Object> preparedStmtList = new ArrayList<>();
         String query = queryBuilder.getMRSearchQuery(criteria, preparedStmtList);
         List<MarriageRegistration> registrations =  jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
@@ -61,7 +61,7 @@ public class MRRepository {
     }
 
 
-    public void save(MarriageRegistrationSearchCriteria marriageRegistrationRequest) {
+    public void save(MarriageRegistrationRequest marriageRegistrationRequest) {
         producer.push(config.getSaveTopic(), marriageRegistrationRequest);
     }
     /**
