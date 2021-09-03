@@ -7,7 +7,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.egov.mr.web.models.calculation.Calculation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -107,9 +106,6 @@ public class MarriageRegistration {
 	  @Size(max=128)
       private String comment;
 	  
-	  
-      @JsonProperty("calculation")
-      private Calculation calculation;
 	  
 	  public MarriageRegistration addWitnessItem(Witness witnessItem) {
           if (this.witness == null) {

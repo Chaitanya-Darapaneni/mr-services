@@ -3,7 +3,6 @@ package org.egov.mr.validator;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,10 +13,8 @@ import org.egov.mr.web.models.MarriageRegistration;
 import org.egov.mr.web.models.MarriageRegistrationRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.util.CollectionUtils;
 
 import static org.egov.mr.util.MRConstants.businessService_MR;
-
 
 public class MRValidator {
 	
@@ -93,175 +90,5 @@ public class MRValidator {
 		});
 		
 	}
-	
-    /**
-     *  Validates the update request
-     * @param request The input TradeLicenseRequest Object
-     */
-    public void validateUpdate(MarriageRegistrationRequest request, List<MarriageRegistration> searchResult) {
-        List<MarriageRegistration> marriageRegistrations = request.getMarriageRegistrations();
-        if (searchResult.size() != marriageRegistrations.size())
-            throw new CustomException("INVALID UPDATE", "The license to be updated is not in database");
-        validateAllIds(searchResult, marriageRegistrations);
-        String businessService = request.getMarriageRegistrations().isEmpty()?null:marriageRegistrations.get(0).getBusinessService();
-             
-        if (businessService == null)
-            businessService = businessService_MR;
-        switch (businessService) {
-            case businessService_MR:
-                validateMRSpecificNotNullFields(request);
-                break;
-
-        }
-
-        validateDuplicateDocuments(request);
-        setFieldsFromSearch(request, searchResult);
-        
-    }
-
-    
-    private void setFieldsFromSearch(MarriageRegistrationRequest request, List<MarriageRegistration> searchResult) {
-        Map<String,MarriageRegistration> idToMarriageRegistrationFromSearch = new HashMap<>();
-        searchResult.forEach(tradeLicense -> {
-            idToMarriageRegistrationFromSearch.put(tradeLicense.getId(),tradeLicense);
-        });
-        request.getMarriageRegistrations().forEach(license -> {
-            license.getAuditDetails().setCreatedBy(idToMarriageRegistrationFromSearch.get(license.getId()).getAuditDetails().getCreatedBy());
-            license.getAuditDetails().setCreatedTime(idToMarriageRegistrationFromSearch.get(license.getId()).getAuditDetails().getCreatedTime());
-            license.setStatus(idToMarriageRegistrationFromSearch.get(license.getId()).getStatus());
-            license.setMrNumber(idToMarriageRegistrationFromSearch.get(license.getId()).getMrNumber());
-
-        });
-    }
-    
-  
-    private void validateDuplicateDocuments(MarriageRegistrationRequest request){
-        List<String> documentFileStoreIds = new LinkedList();
-        request.getMarriageRegistrations().forEach(marriageRegistration -> {
-            if(marriageRegistration.getApplicationDocuments()!=null){
-                marriageRegistration.getApplicationDocuments().forEach(
-                        document -> {
-                                if(documentFileStoreIds.contains(document.getFileStoreId()))
-                                    throw new CustomException("DUPLICATE_DOCUMENT ERROR","Same document cannot be used multiple times");
-                                else documentFileStoreIds.add(document.getFileStoreId());
-                        }
-                );
-            }
-        });
-    }
-    
-    /**
-     * Validates if all ids are same as obtained from search result
-     * @param searchResult The marriageRegistration from search
-     * @param marriageRegistrations The marriageRegistrations from the update Request
-     */
-    private void validateAllIds(List<MarriageRegistration> searchResult,List<MarriageRegistration> marriageRegistrations){
-
-        Map<String,MarriageRegistration> idToMarriageRegistrationFromSearch = new HashMap<>();
-        searchResult.forEach(marriageRegistration -> {
-            idToMarriageRegistrationFromSearch.put(marriageRegistration.getId(),marriageRegistration);
-        });
-
-        Map<String,String> errorMap = new HashMap<>();
-        marriageRegistrations.forEach(marriageRegistrationObj -> {
-        	MarriageRegistration searchedMarriageRegistration = idToMarriageRegistrationFromSearch.get(marriageRegistrationObj.getId());
-
-            if(!searchedMarriageRegistration.getApplicationNumber().equalsIgnoreCase(marriageRegistrationObj.getApplicationNumber()))
-                errorMap.put("INVALID UPDATE","The application number from search: "+searchedMarriageRegistration.getApplicationNumber()
-                        +" and from update: "+marriageRegistrationObj.getApplicationNumber()+" does not match");
-
-            if(!searchedMarriageRegistration.getMarriagePlace().getId().
-                    equalsIgnoreCase(marriageRegistrationObj.getMarriagePlace().getId()))
-                errorMap.put("INVALID UPDATE","The id "+marriageRegistrationObj.getMarriagePlace().getId()+" does not exist");
-
-            compareIdList(getCouple(searchedMarriageRegistration),getCouple(marriageRegistrationObj),errorMap);
-            compareIdList(getCoupleAddress(searchedMarriageRegistration),getCoupleAddress(marriageRegistrationObj),errorMap);
-            compareIdList(getGuardianDetails(searchedMarriageRegistration),getGuardianDetails(marriageRegistrationObj),errorMap);
-            compareIdList(getWitness(searchedMarriageRegistration),getWitness(marriageRegistrationObj),errorMap);
-            compareIdList(getApplicationDocIds(searchedMarriageRegistration),getApplicationDocIds(marriageRegistrationObj),errorMap);
-            compareIdList(getVerficationDocIds(searchedMarriageRegistration),getVerficationDocIds(marriageRegistrationObj),errorMap);
-        });
-
-        if(!CollectionUtils.isEmpty(errorMap))
-            throw new CustomException(errorMap);
-    }
-    
-    
-
-    private List<String> getCouple(MarriageRegistration marriageRegistration){
-        List<String> coupleIds = new LinkedList<>();
-        if(!CollectionUtils.isEmpty(marriageRegistration.getCoupleDetails())){
-        	marriageRegistration.getCoupleDetails().forEach(couple -> {
-                coupleIds.add(couple.getId());
-            });
-        }
-        return coupleIds;
-    }
-    
-    private List<String> getCoupleAddress(MarriageRegistration marriageRegistration){
-        List<String> coupleAddressIds = new LinkedList<>();
-        if(!CollectionUtils.isEmpty(marriageRegistration.getCoupleDetails())){
-        	marriageRegistration.getCoupleDetails().forEach(couple -> {
-                coupleAddressIds.add(couple.getCoupleAddress().getId());
-            });
-        }
-        return coupleAddressIds;
-    }
-    
-    private List<String> getGuardianDetails(MarriageRegistration marriageRegistration){
-        List<String> coupleAddressIds = new LinkedList<>();
-        if(!CollectionUtils.isEmpty(marriageRegistration.getCoupleDetails())){
-        	marriageRegistration.getCoupleDetails().forEach(couple -> {
-                coupleAddressIds.add(couple.getGuardianDetails().getId());
-            });
-        }
-        return coupleAddressIds;
-    }
-    
-    private List<String> getWitness(MarriageRegistration marriageRegistration){
-        List<String> coupleIds = new LinkedList<>();
-        if(!CollectionUtils.isEmpty(marriageRegistration.getWitness())){
-        	marriageRegistration.getWitness().forEach(witness -> {
-                coupleIds.add(witness.getId());
-            });
-        }
-        return coupleIds;
-    }
-    
-
-    private List<String> getApplicationDocIds(MarriageRegistration marriageRegistration){
-        List<String> applicationDocIds = new LinkedList<>();
-        if(!CollectionUtils.isEmpty(marriageRegistration.getApplicationDocuments())){
-            marriageRegistration.getApplicationDocuments().forEach(document -> {
-                applicationDocIds.add(document.getId());
-            });
-        }
-        return applicationDocIds;
-    }
-
-
-    private List<String> getVerficationDocIds(MarriageRegistration marriageRegistration){
-        List<String> verficationDocIds = new LinkedList<>();
-        if(!CollectionUtils.isEmpty(marriageRegistration.getVerificationDocuments())) {
-            marriageRegistration.getVerificationDocuments().forEach(document -> {
-                verficationDocIds.add(document.getId());
-            });
-        }
-        return verficationDocIds;
-    }
-    
-    /**
-     * Checks if the ids are present in the searchedIds
-     * @param searchIds Ids got from search
-     * @param updateIds The ids received from update Request
-     * @param errorMap The map for collecting errors
-     */
-    private void compareIdList(List<String> searchIds,List<String> updateIds,Map<String,String> errorMap){
-        if(!CollectionUtils.isEmpty(searchIds))
-            searchIds.forEach(searchId -> {
-                if(!updateIds.contains(searchId))
-                    errorMap.put("INVALID UPDATE","The id: "+searchId+" was not present in update request");
-            });
-    }
 
 }

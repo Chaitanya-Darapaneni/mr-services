@@ -67,21 +67,21 @@ import javax.servlet.http.HttpServletRequest;
                                                        @Valid @ModelAttribute MarriageRegistrationSearchCriteria criteria,
                                                        @PathVariable(required = false) String servicename
             , @RequestHeader HttpHeaders headers) {
-        List<MarriageRegistration> marriageRegistrations = marriageRegistrationService.search(criteria, requestInfoWrapper.getRequestInfo(), servicename, headers);
+        List<TradeLicense> licenses = tradeLicenseService.search(criteria, requestInfoWrapper.getRequestInfo(), servicename, headers);
 
-        MarriageRegistrationResponse response = MarriageRegistrationResponse.builder().marriageRegistrations(marriageRegistrations).responseInfo(
+        MarriageRegistrationResponse response = MarriageRegistrationResponse.builder().licenses(licenses).responseInfo(
                 responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true))
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @RequestMapping(value = {"/{servicename}/_update", "/_update"}, method = RequestMethod.POST)
-    public ResponseEntity<MarriageRegistrationResponse> update(@Valid @RequestBody MarriageRegistrationRequest marriageRegistrationRequest,
+    public ResponseEntity<MarriageRegistrationResponse> update(@Valid @RequestBody MarriageRegistrationRequest tradeLicenseRequest,
                                                        @PathVariable(required = false) String servicename) {
-        List<MarriageRegistration> marriageRegistrations = marriageRegistrationService.update(marriageRegistrationRequest, servicename);
+        List<TradeLicense> licenses = tradeLicenseService.update(tradeLicenseRequest, servicename);
 
-        MarriageRegistrationResponse response = MarriageRegistrationResponse.builder().marriageRegistrations(marriageRegistrations).responseInfo(
-                responseInfoFactory.createResponseInfoFromRequestInfo(marriageRegistrationRequest.getRequestInfo(), true))
+        MarriageRegistrationResponse response = MarriageRegistrationResponse.builder().licenses(licenses).responseInfo(
+                responseInfoFactory.createResponseInfoFromRequestInfo(tradeLicenseRequest.getRequestInfo(), true))
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

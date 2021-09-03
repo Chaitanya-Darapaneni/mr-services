@@ -134,9 +134,6 @@ public class MRConfiguration {
     private String mdmsEndPoint;
 
 
- // Workflow
-    @Value("${create.mr.workflow.name}")
-    private String mrBusinessServiceValue;
 
     @Value("${workflow.context.path}")
     private String wfHost;

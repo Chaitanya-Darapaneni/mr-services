@@ -35,8 +35,6 @@ public class MRConstants {
     public static final String STATUS_PAID  = "PAID";
 
     public static final String BILL_AMOUNT_JSONPATH = "$.Bill[0].totalAmount";
-    
-	public static final String CITIZEN_SENDBACK_ACTION = "SENDBACKTOCITIZEN";
 
 
 
