@@ -145,7 +145,7 @@ CREATE TABLE eg_mr_gaurdiandetails(
     CONSTRAINT fk_eg_mr_applicationdocument FOREIGN KEY (mr_id) REFERENCES eg_mr_application (id)
 );
 
-CREATE TABLE eg_mr_VerificationDocument(
+CREATE TABLE eg_mr_verificationDocument(
     id character varying(64),
     tenantId character varying(64),
     documentType character varying(64),

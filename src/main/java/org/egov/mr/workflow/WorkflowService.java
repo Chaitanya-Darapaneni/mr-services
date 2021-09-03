@@ -19,14 +19,14 @@ import java.util.List;
 public class WorkflowService {
 
 
-    private TLConfiguration config;
+    private MRConfiguration config;
 
     private ServiceRequestRepository serviceRequestRepository;
 
     private ObjectMapper mapper;
 
     @Autowired
-    public WorkflowService(TLConfiguration config, ServiceRequestRepository serviceRequestRepository, ObjectMapper mapper) {
+    public WorkflowService(MRConfiguration config, ServiceRequestRepository serviceRequestRepository, ObjectMapper mapper) {
         this.config = config;
         this.serviceRequestRepository = serviceRequestRepository;
         this.mapper = mapper;

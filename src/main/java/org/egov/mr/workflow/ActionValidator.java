@@ -1,31 +1,30 @@
 package org.egov.mr.workflow;
 
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.request.Role;
+import static org.egov.mr.util.MRConstants.ACTION_APPLY;
+import static org.egov.mr.util.MRConstants.ACTION_INITIATE;
+import static org.egov.mr.util.MRConstants.STATUS_INITIATED;
+import static org.egov.mr.util.MRConstants.businessService_MR;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.egov.mr.web.models.MarriageRegistrationRequest;
+import org.egov.mr.web.models.workflow.BusinessService;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-
-import static org.egov.mr.util.MRConstants.businessService_MR;
-
-import java.util.*;
-
-import static org.egov.mr.util.MRConstants.*;
 
 
 @Component
 public class ActionValidator {
 
 
-    private WorkflowConfig workflowConfig;
 
     private WorkflowService workflowService;
 
     @Autowired
-    public ActionValidator(WorkflowConfig workflowConfig, WorkflowService workflowService) {
-        this.workflowConfig = workflowConfig;
+    public ActionValidator( WorkflowService workflowService) {
         this.workflowService = workflowService;
     }
 
@@ -38,7 +37,7 @@ public class ActionValidator {
      */
 	public void validateCreateRequest(MarriageRegistrationRequest request){
         Map<String, String> errorMap = new HashMap<>();
-        request.getMarriageRegistration().forEach(marriageRegistration -> {
+        request.getMarriageRegistrations().forEach(marriageRegistration -> {
                        
             String businessService = marriageRegistration.getBusinessService();
             if (businessService == null)
@@ -73,9 +72,9 @@ public class ActionValidator {
 
     /**
      * Validates the update request
-     * @param request The tradeLciense update request
+     * @param request The Marriage Registration update request
      */
-    public void validateUpdateRequest(TradeLicenseRequest request,BusinessService businessService){
+    public void validateUpdateRequest(MarriageRegistrationRequest request,BusinessService businessService){
         validateDocumentsForUpdate(request);
        // validateRole(request);
        // validateAction(request);
@@ -85,17 +84,17 @@ public class ActionValidator {
 
     /**
      * Validates the applicationDocument
-     * @param request The tradeLciense create or update request
+     * @param request The Marriage Registration create or update request
      */
-    private void validateDocumentsForUpdate(TradeLicenseRequest request){
+    private void validateDocumentsForUpdate(MarriageRegistrationRequest request){
         Map<String,String> errorMap = new HashMap<>();
-        request.getLicenses().forEach(license -> {
-            if(ACTION_INITIATE.equalsIgnoreCase(license.getAction()) && !license.getApplicationType().toString().equals(TLConstants.APPLICATION_TYPE_RENEWAL)){
-                if(license.getTradeLicenseDetail().getApplicationDocuments()!=null)
+        request.getMarriageRegistrations().forEach(marriageRegistration -> {
+            if(ACTION_INITIATE.equalsIgnoreCase(marriageRegistration.getAction()) ){
+                if(marriageRegistration.getApplicationDocuments()!=null)
                     errorMap.put("INVALID STATUS","Status cannot be INITIATE when application document are provided");
             }
-            if(ACTION_APPLY.equalsIgnoreCase(license.getAction())){
-                if(license.getTradeLicenseDetail().getApplicationDocuments()==null)
+            if(ACTION_APPLY.equalsIgnoreCase(marriageRegistration.getAction())){
+                if(marriageRegistration.getApplicationDocuments()==null)
                     errorMap.put("INVALID STATUS","Status cannot be APPLY when application document are not provided");
             }
         });
@@ -105,92 +104,46 @@ public class ActionValidator {
     }
 
 
-    /**
-     * Validates if the role of the logged in user can perform the given action
-     * @param request The tradeLciense create or update request
-     */
-    private void validateRole(TradeLicenseRequest request){
-       Map<String,List<String>> roleActionMap = workflowConfig.getRoleActionMap();
-       Map<String,String> errorMap = new HashMap<>();
-       List<TradeLicense> licenses = request.getLicenses();
-       RequestInfo requestInfo = request.getRequestInfo();
-       List<Role> roles = requestInfo.getUserInfo().getRoles();
-
-       List<String> actions = new LinkedList<>();
-       roles.forEach(role -> {
-           if(!CollectionUtils.isEmpty(roleActionMap.get(role.getCode())))
-           {
-               actions.addAll(roleActionMap.get(role.getCode()));}
-       });
-
-       licenses.forEach(license -> {
-          if(!actions.contains(license.getAction().toString()))
-              errorMap.put("UNAUTHORIZED UPDATE","The action cannot be performed by this user");
-       });
-       if(!errorMap.isEmpty())
-           throw new CustomException(errorMap);
-    }
 
 
-    /**
-     * Validate if the action can be performed on the current status
-     * @param request The tradeLciense update request
-     */
-    private void validateAction(TradeLicenseRequest request){
-       Map<String,List<String>> actionStatusMap = workflowConfig.getActionCurrentStatusMap();
-        Map<String,String> errorMap = new HashMap<>();
 
-        request.getLicenses().forEach(license -> {
-           if(actionStatusMap.get(license.getStatus().toString())!=null){
-               if(!actionStatusMap.get(license.getStatus().toString()).contains(license.getAction().toString()))
-                   errorMap.put("UNAUTHORIZED ACTION","The action "+license.getAction() +" cannot be applied on the status "+license.getStatus());
-               }
-       });
-        if(!errorMap.isEmpty())
-            throw new CustomException(errorMap);
-    }
+
 
 
     /**
      * Validates if the any new object is added in the request
-     * @param request The tradeLciense update request
+     * @param request The Marriage Registration update request
      */
-    private void validateIds(TradeLicenseRequest request,BusinessService businessService){
+    private void validateIds(MarriageRegistrationRequest request,BusinessService businessService){
         Map<String,String> errorMap = new HashMap<>();
-        request.getLicenses().forEach(license -> {
+        request.getMarriageRegistrations().forEach(marriageRegistration -> {
 
-            String namefBusinessService=license.getBusinessService();
-            if((namefBusinessService==null) || (namefBusinessService.equals(businessService_TL))||(namefBusinessService.equals(businessService_BPA) && (!license.getStatus().equalsIgnoreCase(STATUS_INITIATED))))
+            String namefBusinessService=marriageRegistration.getBusinessService();
+            if((namefBusinessService==null) || (namefBusinessService.equals(businessService_MR))  && (!marriageRegistration.getStatus().equalsIgnoreCase(STATUS_INITIATED)))
             {
-                if(!workflowService.isStateUpdatable(license.getStatus(), businessService)) {
-                    if (license.getId() == null)
-                        errorMap.put("INVALID UPDATE", "Id of tradeLicense cannot be null");
-                    if(license.getTradeLicenseDetail().getId()==null)
-                        errorMap.put("INVALID UPDATE", "Id of tradeLicenseDetail cannot be null");
-                    if(license.getTradeLicenseDetail().getAddress()==null)
-                        errorMap.put("INVALID UPDATE", "Id of address cannot be null");
-                    license.getTradeLicenseDetail().getOwners().forEach(owner -> {
-                        if(owner.getUuid()==null)
-                            errorMap.put("INVALID UPDATE", "Id of owner cannot be null");
-                        if(!CollectionUtils.isEmpty(owner.getDocuments())){
-                            owner.getDocuments().forEach(document -> {
-                                if(document.getId()==null)
-                                    errorMap.put("INVALID UPDATE", "Id of owner document cannot be null");
-                            });
-                          }
+                if(!workflowService.isStateUpdatable(marriageRegistration.getStatus(), businessService)) {
+                    if (marriageRegistration.getId() == null)
+                        errorMap.put("INVALID UPDATE", "Id of marriageRegistration cannot be null");
+                    if(marriageRegistration.getMarriagePlace().getId()==null)
+                        errorMap.put("INVALID UPDATE", "Id of Marriage Place cannot be null");
+                    marriageRegistration.getCoupleDetails().forEach(couple -> {
+                        if(couple.getId()==null)
+                            errorMap.put("INVALID UPDATE", "Id of Couple cannot be null");
+                        
+                        if(couple.getCoupleAddress().getId()==null)
+                            errorMap.put("INVALID UPDATE", "Id of Couple Address cannot be null");
+                      
                         });
-                    license.getTradeLicenseDetail().getTradeUnits().forEach(tradeUnit -> {
-                        if(tradeUnit.getId()==null)
-                            errorMap.put("INVALID UPDATE", "Id of tradeUnit cannot be null");
+                    
+                    marriageRegistration.getWitness().forEach( marriageWitness -> {
+                    	if(marriageWitness.getId() == null)
+                    	{
+                    		 errorMap.put("INVALID UPDATE", "Id of Marriage Witness cannot be null");
+                    	}
                     });
-                    if(!CollectionUtils.isEmpty(license.getTradeLicenseDetail().getAccessories())){
-                        license.getTradeLicenseDetail().getAccessories().forEach(accessory -> {
-                            if(accessory.getId()==null)
-                                errorMap.put("INVALID UPDATE", "Id of accessory cannot be null");
-                        });
-                    }
-                    if(!CollectionUtils.isEmpty(license.getTradeLicenseDetail().getApplicationDocuments())){
-                        license.getTradeLicenseDetail().getApplicationDocuments().forEach(document -> {
+                 
+                    if(!CollectionUtils.isEmpty(marriageRegistration.getApplicationDocuments())){
+                        marriageRegistration.getApplicationDocuments().forEach(document -> {
                             if(document.getId()==null)
                                 errorMap.put("INVALID UPDATE", "Id of applicationDocument cannot be null");
                         });

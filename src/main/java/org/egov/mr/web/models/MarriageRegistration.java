@@ -1,5 +1,6 @@
 package org.egov.mr.web.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -104,5 +105,42 @@ public class MarriageRegistration {
 	  
 	  @Size(max=128)
       private String comment;
+	  
+	  
+	  public MarriageRegistration addWitnessItem(Witness witnessItem) {
+          if (this.witness == null) {
+          this.witness = new ArrayList<>();
+          }
+          if(!this.witness.contains(witnessItem))
+              this.witness.add(witnessItem);
+          return this;
+      }
+	  
+	  public MarriageRegistration addCoupleDetailsItem(Couple coupleItem) {
+          if (this.coupleDetails == null) {
+          this.coupleDetails = new ArrayList<>();
+          }
+          if(!this.coupleDetails.contains(coupleItem))
+              this.coupleDetails.add(coupleItem);
+          return this;
+      }
+	  
+	  public MarriageRegistration addApplicationDocumentsItem(Document applicationDocumentsItem) {
+          if (this.applicationDocuments == null) {
+          this.applicationDocuments = new ArrayList<>();
+          }
+          if(!this.applicationDocuments.contains(applicationDocumentsItem))
+              this.applicationDocuments.add(applicationDocumentsItem);
+          return this;
+      }
+
+      public MarriageRegistration addVerificationDocumentsItem(Document verificationDocumentsItem) {
+          if (this.verificationDocuments == null) {
+          this.verificationDocuments = new ArrayList<>();
+          }
+          if(!this.verificationDocuments.contains(verificationDocumentsItem))
+              this.verificationDocuments.add(verificationDocumentsItem);
+          return this;
+      }
     
 }

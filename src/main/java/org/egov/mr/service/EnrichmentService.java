@@ -355,16 +355,7 @@ public class EnrichmentService {
                     });
                 }
             }
-            else {
-                if(!CollectionUtils.isEmpty(tradeLicense.getTradeLicenseDetail().getVerificationDocuments())){
-                    tradeLicense.getTradeLicenseDetail().getVerificationDocuments().forEach(document -> {
-                        if(document.getId()==null){
-                            document.setId(UUID.randomUUID().toString());
-                            document.setActive(true);
-                        }
-                    });
-                }
-            }
+           
         });
     }
 
