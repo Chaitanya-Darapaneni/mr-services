@@ -33,9 +33,10 @@ public class EnrichmentService {
 
     @Autowired
     public EnrichmentService(IdGenRepository idGenRepository, MRConfiguration config,
-                             BoundaryService boundaryService,WorkflowService workflowService) {
+                             BoundaryService boundaryService,WorkflowService workflowService,MarriageRegistrationUtil marriageRegistrationUtil) {
         this.idGenRepository = idGenRepository;
         this.config = config;
+        this.marriageRegistrationUtil=marriageRegistrationUtil;
         this.boundaryService = boundaryService;
         this.workflowService = workflowService;
     }
@@ -111,9 +112,9 @@ public class EnrichmentService {
 
 
     /**
-     * Sets the ApplicationNumber for given TradeLicenseRequest
+     * Sets the ApplicationNumber for given MarriageRegistrationRequest
      *
-     * @param request TradeLicenseRequest which is to be created
+     * @param request MarriageRegistrationRequest which is to be created
      */
     private void setIdgenIds(MarriageRegistrationRequest request) {
         RequestInfo requestInfo = request.getRequestInfo();
@@ -133,14 +134,14 @@ public class EnrichmentService {
 
         Map<String, String> errorMap = new HashMap<>();
         if (applicationNumbers.size() != request.getMarriageRegistrations().size()) {
-            errorMap.put("IDGEN ERROR ", "The number of LicenseNumber returned by idgen is not equal to number of TradeLicenses");
+            errorMap.put("IDGEN ERROR ", "The number of LicenseNumber returned by idgen is not equal to number of MarriageRegistrations");
         }
 
         if (!errorMap.isEmpty())
             throw new CustomException(errorMap);
 
-        marriageRegistrations.forEach(tradeLicense -> {
-            tradeLicense.setApplicationNumber(itr.next());
+        marriageRegistrations.forEach(marriageRegistartion -> {
+            marriageRegistartion.setApplicationNumber(itr.next());
         });
     }
 
@@ -218,10 +219,10 @@ public class EnrichmentService {
     }
 
 
-    public void enrichMRUpdateRequest(MarriageRegistrationRequest tradeLicenseRequest, BusinessService businessService){
-        RequestInfo requestInfo = tradeLicenseRequest.getRequestInfo();
+    public void enrichMRUpdateRequest(MarriageRegistrationRequest marriageRegistrationRequest, BusinessService businessService){
+        RequestInfo requestInfo = marriageRegistrationRequest.getRequestInfo();
         AuditDetails auditDetails = marriageRegistrationUtil.getAuditDetails(requestInfo.getUserInfo().getUuid(), false);
-        tradeLicenseRequest.getMarriageRegistrations().forEach(marriageRegistration -> {
+        marriageRegistrationRequest.getMarriageRegistrations().forEach(marriageRegistration -> {
             marriageRegistration.setAuditDetails(auditDetails);
             enrichAssignes(marriageRegistration);
             String nameOfBusinessService = marriageRegistration.getBusinessService();
@@ -318,7 +319,7 @@ public class EnrichmentService {
 
                 Map<String, String> errorMap = new HashMap<>();
                 if (licenseNumbers.size() != count) {
-                    errorMap.put("IDGEN ERROR ", "The number of LicenseNumber returned by idgen is not equal to number of TradeLicenses");
+                    errorMap.put("IDGEN ERROR ", "The number of LicenseNumber returned by idgen is not equal to number of MarriageRegistartions");
                 }
 
                 if (!errorMap.isEmpty())
@@ -359,8 +360,8 @@ public class EnrichmentService {
      * Enriches the object after status is assigned
      * @param MarriageRegistrationRequest The update request
      */
-    public void postStatusEnrichment(MarriageRegistrationRequest tradeLicenseRequest,List<String>endstates){
-        setLicenseNumberAndIssueDate(tradeLicenseRequest,endstates);
+    public void postStatusEnrichment(MarriageRegistrationRequest marriageRegistrationRequest,List<String>endstates){
+        setLicenseNumberAndIssueDate(marriageRegistrationRequest,endstates);
     }
 
 

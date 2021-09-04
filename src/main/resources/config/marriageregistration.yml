@@ -3,7 +3,7 @@ serviceMaps:
  mappings:
  - version: 1.0
    description: Persists marriageRegistartion details in eg_mr_application  table
-   fromTopic: save-tl-tradelicense
+   fromTopic: save-mr-marriageregistration
    isTransaction: true
    queryMaps:
 
@@ -37,6 +37,10 @@ serviceMaps:
           - jsonPath: $.MarriageRegistrations.*.auditDetails.createdTime
 
           - jsonPath: $.MarriageRegistrations.*.auditDetails.lastModifiedTime
+          
+          - jsonPath: $.MarriageRegistrations.*.businessService
+
+          - jsonPath: $.MarriageRegistrations.*.workflowCode
 
 
 
@@ -74,7 +78,7 @@ serviceMaps:
 
           - jsonPath: $.MarriageRegistrations.*.coupleDetails.*.tenantId
 
-          - jsonPath: $.MarriageRegistrations.*.id
+          - jsonPath: $.MarriageRegistrations.[*][?({id} in @.coupleDetails[*].id)].id
 
           - jsonPath: $.MarriageRegistrations.*.coupleDetails.*.isDivyang
 
@@ -93,8 +97,6 @@ serviceMaps:
           - jsonPath: $.MarriageRegistrations.*.coupleDetails.*.fatherName
           
           - jsonPath: $.MarriageRegistrations.*.coupleDetails.*.motherName
-          
-          - jsonPath: $.MarriageRegistrations[*][?({id} in @.coupleDetails[*].id)].marriagePlace.id
 
           - jsonPath: $.MarriageRegistrations[*][?({id} in @.coupleDetails[*].id)].auditDetails.createdBy
 
@@ -111,13 +113,13 @@ serviceMaps:
 
  - version: 1.0
    description: Update marriageRegistration details in eg_mr_application  table
-   fromTopic: update-tl-tradelicense
+   fromTopic: update-mr-marriageregistration
    isTransaction: true
    queryMaps:
 
 
 
-       - query: UPDATE public.eg_mr_application SET accountid=?,  mrnumber=? , marriagedate=?, issueddate=?, action=?, status=?, lastmodifiedby=?,  lastmodifiedtime=? WHERE id = ?;
+       - query: UPDATE public.eg_mr_application SET accountid=?,  mrnumber=? , marriagedate=?, issueddate=?, action=?, status=?, lastmodifiedby=?,  lastmodifiedtime=? ,businessservice = ?, workflowcode = ? WHERE id = ?;
          basePath: MarriageRegistrations.*
          jsonMaps:
           - jsonPath: $.MarriageRegistrations.*.accountId
@@ -135,6 +137,10 @@ serviceMaps:
           - jsonPath: $.MarriageRegistrations.*.auditDetails.lastModifiedBy
 
           - jsonPath: $.MarriageRegistrations.*.auditDetails.lastModifiedTime
+          
+          - jsonPath: $.MarriageRegistrations.*.businessService
+      
+          - jsonPath: $.MarriageRegistrations.*.workflowCode
 
           - jsonPath: $.MarriageRegistrations.*.id
 
@@ -166,7 +172,7 @@ serviceMaps:
 
           - jsonPath: $.MarriageRegistrations.*.coupleDetails.*.tenantId
 
-          - jsonPath: $.MarriageRegistrations.*.id
+          - jsonPath: $.MarriageRegistrations.[*][?({id} in @.coupleDetails[*].id)].id
 
           - jsonPath: $.MarriageRegistrations.*.coupleDetails.*.isDivyang
 
@@ -185,8 +191,6 @@ serviceMaps:
           - jsonPath: $.MarriageRegistrations.*.coupleDetails.*.fatherName
           
           - jsonPath: $.MarriageRegistrations.*.coupleDetails.*.motherName
-          
-          - jsonPath: $.MarriageRegistrations[*][?({id} in @.coupleDetails[*].id)].marriagePlace.id
 
           - jsonPath: $.MarriageRegistrations[*][?({id} in @.coupleDetails[*].id)].auditDetails.createdBy
 
@@ -356,7 +360,7 @@ serviceMaps:
 
           - jsonPath: $.MarriageRegistrations.*.witness*.tenantId
 
-          - jsonPath: $.MarriageRegistrations.*.id
+          - jsonPath: $.MarriageRegistrations[*][?({id} in @.witness[*].id)].id
 
           - jsonPath: $.MarriageRegistrations.*.witness*.title
 

@@ -160,3 +160,8 @@ CREATE TABLE eg_mr_verificationDocument(
     CONSTRAINT pk_eg_tl_VerificationDocument PRIMARY KEY (id),
     CONSTRAINT fk_eg_tl_VerificationDocument FOREIGN KEY (mr_id) REFERENCES eg_mr_application (id)
 );
+
+
+
+CREATE SEQUENCE SEQ_EG_MR_APL;
+CREATE SEQUENCE SEQ_EG_MR_MRN;

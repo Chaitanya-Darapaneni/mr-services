@@ -33,7 +33,7 @@ public class ActionValidator {
 
     /**
      * Validates create request
-     * @param request The tradeLicense Create request
+     * @param request The marriageRegistration Create request
      */
 	public void validateCreateRequest(MarriageRegistrationRequest request){
         Map<String, String> errorMap = new HashMap<>();

@@ -41,7 +41,7 @@ public class MRRowMapper  implements ResultSetExtractor<List<MarriageRegistratio
         Map<String, MarriageRegistration> marriageRegistrationMap = new LinkedHashMap<>();
 
         while (rs.next()) {
-            String id = rs.getString("mr_id");
+            String id = rs.getString("mr_originalId");
             MarriageRegistration currentMarriageRegistration = marriageRegistrationMap.get(id);
             String tenantId = rs.getString("mr_tenantId");
 
@@ -83,10 +83,10 @@ public class MRRowMapper  implements ResultSetExtractor<List<MarriageRegistratio
             	
             	CoupleAddress coupleAddress = null ;
             	
-            	if(rs.getString("mrca.id")!=null )
+            	if(rs.getString("mrca_id")!=null )
             	{
             		coupleAddress = CoupleAddress.builder()
-            				.id(rs.getString("mrca.id"))
+            				.id(rs.getString("mrca_id"))
             				.tenantId(rs.getString("mr_tenantId"))
             				.addressLine1(rs.getString("mrca_addressLine1"))
             				.addressLine2(rs.getString("mrca_addressLine2"))
@@ -122,10 +122,10 @@ public class MRRowMapper  implements ResultSetExtractor<List<MarriageRegistratio
             	
             	GuardianDetails guardianDetails = null ;
             	
-            	if(rs.getString("mrgd.id")!=null )
+            	if(rs.getString("mrgd_id")!=null )
             	{
             		guardianDetails = GuardianDetails.builder()
-            				.id(rs.getString("mrgd.id"))
+            				.id(rs.getString("mrgd_id"))
             				.tenantId(rs.getString("mr_tenantId"))
             				.addressLine1(rs.getString("mrgd_addressLine1"))
             				.addressLine2(rs.getString("mrgd_addressLine2"))

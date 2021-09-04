@@ -1,17 +1,15 @@
 package org.egov.mr.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.*;
 import org.egov.tracer.config.TracerConfiguration;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.util.TimeZone;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Import({TracerConfiguration.class})
@@ -67,13 +65,13 @@ public class MRConfiguration {
   
 
     //Persister Config
-    @Value("${persister.save.tradelicense.topic}")
+    @Value("${persister.save.marriageregistration.topic}")
     private String saveTopic;
 
-    @Value("${persister.update.tradelicense.topic}")
+    @Value("${persister.update.marriageregistration.topic}")
     private String updateTopic;
 
-    @Value("${persister.update.tradelicense.workflow.topic}")
+    @Value("${persister.update.marriageregistration.workflow.topic}")
     private String updateWorkflowTopic;
 
 

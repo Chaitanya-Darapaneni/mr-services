@@ -53,7 +53,7 @@ public class MarriageRegistrationService {
 	
 	@Autowired
 	public MarriageRegistrationService(MRValidator mrValidator,EnrichmentService enrichmentService , MRRepository repository ,MRConfiguration config ,WorkflowService workflowService ,
-			ActionValidator actionValidator,MarriageRegistrationUtil util ,WorkflowIntegrator wfIntegrator) {
+			ActionValidator actionValidator,MarriageRegistrationUtil util ,WorkflowIntegrator wfIntegrator,CalculationService calculationService) {
 		this.mrValidator = mrValidator;
 		this.enrichmentService = enrichmentService;
 		this.repository = repository;
@@ -62,6 +62,7 @@ public class MarriageRegistrationService {
 		this.actionValidator=actionValidator;
 		this.util = util;
 		this.wfIntegrator =wfIntegrator ;
+		this.calculationService =calculationService;
 	}
 
 	public List<MarriageRegistration> create(@Valid MarriageRegistrationRequest marriageRegistrationRequest,String businessServicefromPath) {

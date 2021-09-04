@@ -58,7 +58,7 @@ public class CalculationService {
         List<Calculation> calculations = response.getCalculations();
         Map<String,Calculation> applicationNumberToCalculation = new HashMap<>();
         calculations.forEach(calculation -> {
-            applicationNumberToCalculation.put(calculation.getMarriageRegistration().getApplicationNumber(),calculation);
+            applicationNumberToCalculation.put(request.getMarriageRegistrations().get(0).getApplicationNumber(),calculation);
             calculation.setMarriageRegistration(null);
         });
 
@@ -105,6 +105,7 @@ public class CalculationService {
         	calculation.setTaxHeadEstimates(taxHeadEstimates);
         	calculations.add(calculation);
         	calculation.setTenantId(marriageRegistrations.get(0).getTenantId());
+        	calculation.setApplicationNumber(marriageRegistrations.get(0).getApplicationNumber());
         	
         	FeeAndBillingSlabIds feeAndBillingSlabIds = new FeeAndBillingSlabIds();
         	

@@ -97,7 +97,7 @@ public class MRValidator {
 	
     /**
      *  Validates the update request
-     * @param request The input TradeLicenseRequest Object
+     * @param request The input MarriageRegistrationRequest Object
      */
     public void validateUpdate(MarriageRegistrationRequest request, List<MarriageRegistration> searchResult) {
         List<MarriageRegistration> marriageRegistrations = request.getMarriageRegistrations();
@@ -123,8 +123,8 @@ public class MRValidator {
     
     private void setFieldsFromSearch(MarriageRegistrationRequest request, List<MarriageRegistration> searchResult) {
         Map<String,MarriageRegistration> idToMarriageRegistrationFromSearch = new HashMap<>();
-        searchResult.forEach(tradeLicense -> {
-            idToMarriageRegistrationFromSearch.put(tradeLicense.getId(),tradeLicense);
+        searchResult.forEach(marriageRegistration -> {
+            idToMarriageRegistrationFromSearch.put(marriageRegistration.getId(),marriageRegistration);
         });
         request.getMarriageRegistrations().forEach(license -> {
             license.getAuditDetails().setCreatedBy(idToMarriageRegistrationFromSearch.get(license.getId()).getAuditDetails().getCreatedBy());
