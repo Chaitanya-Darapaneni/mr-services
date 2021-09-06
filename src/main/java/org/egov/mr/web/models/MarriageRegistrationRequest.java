@@ -32,7 +32,7 @@ public class MarriageRegistrationRequest   {
         private List<MarriageRegistration> MarriageRegistrations = null;
 
 
-        public MarriageRegistrationRequest addLicensesItem(MarriageRegistration marriageRegistrationItem) {
+        public MarriageRegistrationRequest addMarriageRegistrationsItem(MarriageRegistration marriageRegistrationItem) {
             if (this.MarriageRegistrations == null) {
             this.MarriageRegistrations = new ArrayList<>();
             }

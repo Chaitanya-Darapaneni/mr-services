@@ -1,5 +1,5 @@
 serviceMaps:
- serviceName: tl-services
+ serviceName: mr-services
  mappings:
  - version: 1.0
    description: Persists marriageRegistartion details in eg_mr_application  table
@@ -18,13 +18,13 @@ serviceMaps:
 
           - jsonPath: $.MarriageRegistrations.*.mrNumber
 
-          - jsonPath: $.MarriageRegistrations.*.applicationnumber
+          - jsonPath: $.MarriageRegistrations.*.applicationNumber
 
-          - jsonPath: $.MarriageRegistrations.*.applicationdate
+          - jsonPath: $.MarriageRegistrations.*.applicationDate
 
-          - jsonPath: $.MarriageRegistrations.*.marriagedate
+          - jsonPath: $.MarriageRegistrations.*.marriageDate
 
-          - jsonPath: $.MarriageRegistrations.*.issueddate
+          - jsonPath: $.MarriageRegistrations.*.issuedDate
 
           - jsonPath: $.MarriageRegistrations.*.action
 
@@ -145,7 +145,7 @@ serviceMaps:
           - jsonPath: $.MarriageRegistrations.*.id
 
 
-       - query: UPDATE public.eg_mr_marriageplace SET  ward=?, placeofmarriage=?, locality=?, additionaldetail=?,  lastmodifiedby=?,  lastmodifiedtime=? WHERE WHERE id = ?;
+       - query: UPDATE public.eg_mr_marriageplace SET  ward=?, placeofmarriage=?, locality=?, additionaldetail=?,  lastmodifiedby=?,  lastmodifiedtime=? WHERE  id = ?;
          basePath: MarriageRegistrations.*.marriagePlace
          jsonMaps:
           - jsonPath: $.MarriageRegistrations.*.marriagePlace.ward
@@ -222,7 +222,7 @@ serviceMaps:
 
           - jsonPath: $.MarriageRegistrations[*][?({id} in @.coupleDetails[*].id)].auditDetails.lastModifiedTime
 
-       - query: INSERT INTO INSERT INTO eg_mr_coupleaddress(id, tenantid, mr_couple_id, addressline1, addressline2, addressline3, country, state, district, pincode, locality, createdby,  lastmodifiedby ,createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET addressline1 = ?, addressline2 = ?, addressline3 = ?, country = ?, state= ?, district = ? , pincode = ? , locality = ?,  lastmodifiedby =? , lastmodifiedtime = ?;
+       - query: INSERT INTO eg_mr_coupleaddress(id, tenantid, mr_couple_id, addressline1, addressline2, addressline3, country, state, district, pincode, locality, createdby,  lastmodifiedby ,createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET addressline1 = ?, addressline2 = ?, addressline3 = ?, country = ?, state= ?, district = ? , pincode = ? , locality = ?,  lastmodifiedby =? , lastmodifiedtime = ?;
          basePath: MarriageRegistrations.*.coupleDetails.*
          jsonMaps:
           - jsonPath: $.MarriageRegistrations.*.coupleDetails.*.coupleAddress.id
@@ -354,13 +354,13 @@ serviceMaps:
 
 
        - query: INSERT INTO public.eg_mr_witness( id, tenantid, mr_id, title, address, firstname, middlename, lastname, country, state, district, pincode, contact, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET title = ?, address = ?, firstname = ?, middlename = ?, lastname = ?, country = ?, state = ?, district = ?, pincode = ? , contact = ? , lastmodifiedby =?, lastmodifiedtime =?;
-         basePath: MarriageRegistrations.*.witness*
+         basePath: MarriageRegistrations.*.witness.*
          jsonMaps:
           - jsonPath: $.MarriageRegistrations.*.witness*.id
 
           - jsonPath: $.MarriageRegistrations.*.witness*.tenantId
 
-          - jsonPath: $.MarriageRegistrations[*][?({id} in @.witness[*].id)].id
+          - jsonPath: $.MarriageRegistrations.[*][?({id} in @.witness[*].id)].id
 
           - jsonPath: $.MarriageRegistrations.*.witness*.title
 
@@ -416,7 +416,7 @@ serviceMaps:
 
 
 
-       - query: INSERT INTO eg_mr_applicationdocument( id, tenantid, active, documenttype, filestoreid, mr_id, active , createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET active = ?, documenttype =?, filestoreid =?,lastmodifiedby =?, lastmodifiedtime =?;
+       - query: INSERT INTO eg_mr_applicationdocument( id, tenantid, active, documenttype, filestoreid, mr_id , createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET active = ?, documenttype =?, filestoreid =?,lastmodifiedby =?, lastmodifiedtime =?;
          basePath: MarriageRegistrations.*.applicationDocuments.*
          jsonMaps:
           - jsonPath: $.MarriageRegistrations.*.applicationDocuments.*.id
@@ -453,12 +453,12 @@ serviceMaps:
 
  - version: 1.0
    description: Persists marraige registration details in eg_mr_application  table
-   fromTopic: update-tl-workflow
+   fromTopic: update-mr-workflow
    isTransaction: true
    queryMaps:
 
 
-       - query: INSERT INTO eg_mr_verificationDocument( id, tenantid, active, documenttype, filestoreid, mr_id, active , createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET active = ?, documenttype =?, filestoreid =?,lastmodifiedby =?, lastmodifiedtime =?;
+       - query: INSERT INTO eg_mr_verificationDocument( id, tenantid, active, documenttype, filestoreid, mr_id, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET active = ?, documenttype =?, filestoreid =?,lastmodifiedby =?, lastmodifiedtime =?;
          basePath: MarriageRegistrations.*.verificationDocuments.*
          jsonMaps:
           - jsonPath: $.MarriageRegistrations.*.verificationDocuments.*.id
@@ -510,7 +510,7 @@ serviceMaps:
           - jsonPath: $.MarriageRegistrations.*.id
 
 
-       - query: UPDATE eg_tl_marriagePlace SET additionaldetail = ?,lastmodifiedby = ?,  lastmodifiedtime = ? WHERE id = ?;
+       - query: UPDATE eg_mr_marriagePlace SET additionaldetail = ?,lastmodifiedby = ?,  lastmodifiedtime = ? WHERE id = ?;
          basePath: MarriageRegistrations.*.marriagePlace
          jsonMaps:
           - jsonPath: $.MarriageRegistrations.*.marriagePlace.additionalDetail
@@ -522,4 +522,3 @@ serviceMaps:
           - jsonPath: $.MarriageRegistrations.*.auditDetails.lastModifiedTime
 
           - jsonPath: $.MarriageRegistrations.*.marriagePlace.id
-

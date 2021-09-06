@@ -122,11 +122,6 @@ public class MRQueryBuilder {
                 addToPreparedStatement(preparedStmtList, mrNumbers);
             }
             
-//            if (criteria.getLicenseNumber() != null) {
-//                addClauseIfRequired(preparedStmtList, builder);
-//                builder.append("  mr.licensenumber = ? ");
-//                preparedStmtList.add(criteria.getLicenseNumber());
-//            }
 
 
 

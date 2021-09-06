@@ -32,7 +32,6 @@ public class Couple {
     @JsonProperty("tenantId")
     private String tenantId = null;
     
-    @Size(max=64)
     @JsonProperty("isGroom")
     private Boolean isGroom;
     

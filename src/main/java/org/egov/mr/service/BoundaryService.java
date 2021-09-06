@@ -51,10 +51,10 @@ public class BoundaryService {
         String tenantId = request.getMarriageRegistrations().get(0).getTenantId();
 
         LinkedList<String> localities = new LinkedList<>();
-        request.getMarriageRegistrations().forEach(license -> {
-            if( license.getMarriagePlace().getLocality()==null)
+        request.getMarriageRegistrations().forEach(marriageRegistration -> {
+            if( marriageRegistration.getMarriagePlace().getLocality()==null)
                 throw new CustomException("INVALID ADDRESS","The address or locality cannot be null");
-            localities.add(license.getMarriagePlace().getLocality().getCode());
+            localities.add(marriageRegistration.getMarriagePlace().getLocality().getCode());
         });
 
         StringBuilder uri = new StringBuilder(config.getLocationHost());

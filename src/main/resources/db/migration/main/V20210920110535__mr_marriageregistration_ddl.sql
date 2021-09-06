@@ -77,7 +77,7 @@ CREATE TABLE eg_mr_coupleaddress(
   createdtime bigint,
   lastmodifiedby character varying(64),
   lastmodifiedtime bigint,
-  CONSTRAINT pk_eg_mr_coupleaddress PRIMARY KEY (id,mr_couple_id),
+  CONSTRAINT pk_eg_mr_coupleaddress PRIMARY KEY (id),
   CONSTRAINT fk_eg_mr_coupleaddress FOREIGN KEY (mr_couple_id) REFERENCES eg_mr_couple (id)
   );
 
@@ -103,7 +103,7 @@ CREATE TABLE eg_mr_gaurdiandetails(
   createdtime bigint,
   lastmodifiedby character varying(64),
   lastmodifiedtime bigint,
-  CONSTRAINT pk_eg_mr_gaurdiandetails PRIMARY KEY (id,mr_couple_id),
+  CONSTRAINT pk_eg_mr_gaurdiandetails PRIMARY KEY (id),
   CONSTRAINT fk_eg_mr_gaurdiandetails FOREIGN KEY (mr_couple_id) REFERENCES eg_mr_couple (id)
   );
   
@@ -125,7 +125,7 @@ CREATE TABLE eg_mr_gaurdiandetails(
   createdtime bigint,
   lastmodifiedby character varying(64),
   lastmodifiedtime bigint,
-  CONSTRAINT pk_eg_mr_witness PRIMARY KEY (id,mr_id),
+  CONSTRAINT pk_eg_mr_witness PRIMARY KEY (id),
   CONSTRAINT fk_eg_mr_witness FOREIGN KEY (mr_id) REFERENCES eg_mr_application (id)
   );
   
@@ -161,7 +161,9 @@ CREATE TABLE eg_mr_verificationDocument(
     CONSTRAINT fk_eg_tl_VerificationDocument FOREIGN KEY (mr_id) REFERENCES eg_mr_application (id)
 );
 
+DROP SEQUENCE IF EXISTS SEQ_EG_MR_APL ;
 
+DROP SEQUENCE IF EXISTS SEQ_EG_MR_MRN;
 
 CREATE SEQUENCE SEQ_EG_MR_APL;
 CREATE SEQUENCE SEQ_EG_MR_MRN;

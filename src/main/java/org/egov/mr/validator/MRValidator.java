@@ -33,9 +33,9 @@ public class MRValidator {
             throw new CustomException("BUSINESSSERVICE_NOTALLOWED", " The business service is not allowed in this module");
         }
         for (MarriageRegistration marriageRegistartions : marriageRegistrationRequest.getMarriageRegistrations()) {
-            String licenseBusinessService = marriageRegistartions.getBusinessService()==null?businessService_MR:marriageRegistartions.getBusinessService();
-            if (!StringUtils.equals(businessServicefromPath, licenseBusinessService)) {
-                throw new CustomException("BUSINESSSERVICE_NOTMATCHING", " The business service inside license not matching with the one sent in path variable");
+            String marriageRegistrationBusinessService = marriageRegistartions.getBusinessService()==null?businessService_MR:marriageRegistartions.getBusinessService();
+            if (!StringUtils.equals(businessServicefromPath, marriageRegistrationBusinessService)) {
+                throw new CustomException("BUSINESSSERVICE_NOTMATCHING", " The business service inside marriageRegistration not matching with the one sent in path variable");
             }
         }
     
@@ -102,7 +102,7 @@ public class MRValidator {
     public void validateUpdate(MarriageRegistrationRequest request, List<MarriageRegistration> searchResult) {
         List<MarriageRegistration> marriageRegistrations = request.getMarriageRegistrations();
         if (searchResult.size() != marriageRegistrations.size())
-            throw new CustomException("INVALID UPDATE", "The license to be updated is not in database");
+            throw new CustomException("INVALID UPDATE", "The marriageRegistration to be updated is not in database");
         validateAllIds(searchResult, marriageRegistrations);
         String businessService = request.getMarriageRegistrations().isEmpty()?null:marriageRegistrations.get(0).getBusinessService();
              
@@ -126,11 +126,11 @@ public class MRValidator {
         searchResult.forEach(marriageRegistration -> {
             idToMarriageRegistrationFromSearch.put(marriageRegistration.getId(),marriageRegistration);
         });
-        request.getMarriageRegistrations().forEach(license -> {
-            license.getAuditDetails().setCreatedBy(idToMarriageRegistrationFromSearch.get(license.getId()).getAuditDetails().getCreatedBy());
-            license.getAuditDetails().setCreatedTime(idToMarriageRegistrationFromSearch.get(license.getId()).getAuditDetails().getCreatedTime());
-            license.setStatus(idToMarriageRegistrationFromSearch.get(license.getId()).getStatus());
-            license.setMrNumber(idToMarriageRegistrationFromSearch.get(license.getId()).getMrNumber());
+        request.getMarriageRegistrations().forEach(marriageRegistration -> {
+            marriageRegistration.getAuditDetails().setCreatedBy(idToMarriageRegistrationFromSearch.get(marriageRegistration.getId()).getAuditDetails().getCreatedBy());
+            marriageRegistration.getAuditDetails().setCreatedTime(idToMarriageRegistrationFromSearch.get(marriageRegistration.getId()).getAuditDetails().getCreatedTime());
+            marriageRegistration.setStatus(idToMarriageRegistrationFromSearch.get(marriageRegistration.getId()).getStatus());
+            marriageRegistration.setMrNumber(idToMarriageRegistrationFromSearch.get(marriageRegistration.getId()).getMrNumber());
 
         });
     }
@@ -203,6 +203,7 @@ public class MRValidator {
         List<String> coupleAddressIds = new LinkedList<>();
         if(!CollectionUtils.isEmpty(marriageRegistration.getCoupleDetails())){
         	marriageRegistration.getCoupleDetails().forEach(couple -> {
+        		if(couple.getCoupleAddress()!=null)
                 coupleAddressIds.add(couple.getCoupleAddress().getId());
             });
         }
@@ -213,6 +214,7 @@ public class MRValidator {
         List<String> coupleAddressIds = new LinkedList<>();
         if(!CollectionUtils.isEmpty(marriageRegistration.getCoupleDetails())){
         	marriageRegistration.getCoupleDetails().forEach(couple -> {
+        		if(couple.getGuardianDetails()!=null)
                 coupleAddressIds.add(couple.getGuardianDetails().getId());
             });
         }
@@ -222,6 +224,7 @@ public class MRValidator {
     private List<String> getWitness(MarriageRegistration marriageRegistration){
         List<String> coupleIds = new LinkedList<>();
         if(!CollectionUtils.isEmpty(marriageRegistration.getWitness())){
+        	if(marriageRegistration.getWitness()!=null)
         	marriageRegistration.getWitness().forEach(witness -> {
                 coupleIds.add(witness.getId());
             });

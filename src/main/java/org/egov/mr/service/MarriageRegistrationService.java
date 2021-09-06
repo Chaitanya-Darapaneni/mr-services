@@ -37,7 +37,7 @@ public class MarriageRegistrationService {
 	
 	private EnrichmentService enrichmentService;
 	
-    private CalculationService calculationService;
+    private CalculatorService calculatorService;
     
     private MRRepository repository;
 
@@ -53,7 +53,7 @@ public class MarriageRegistrationService {
 	
 	@Autowired
 	public MarriageRegistrationService(MRValidator mrValidator,EnrichmentService enrichmentService , MRRepository repository ,MRConfiguration config ,WorkflowService workflowService ,
-			ActionValidator actionValidator,MarriageRegistrationUtil util ,WorkflowIntegrator wfIntegrator,CalculationService calculationService) {
+			ActionValidator actionValidator,MarriageRegistrationUtil util ,WorkflowIntegrator wfIntegrator,CalculatorService calculatorService) {
 		this.mrValidator = mrValidator;
 		this.enrichmentService = enrichmentService;
 		this.repository = repository;
@@ -62,7 +62,7 @@ public class MarriageRegistrationService {
 		this.actionValidator=actionValidator;
 		this.util = util;
 		this.wfIntegrator =wfIntegrator ;
-		this.calculationService =calculationService;
+		this.calculatorService =calculatorService;
 	}
 
 	public List<MarriageRegistration> create(@Valid MarriageRegistrationRequest marriageRegistrationRequest,String businessServicefromPath) {
@@ -75,8 +75,18 @@ public class MarriageRegistrationService {
 	       
 		   if(businessServicefromPath!=null && businessServicefromPath.equals(businessService_MR))
 		   {
-				calculationService.addCalculation(marriageRegistrationRequest);
+				calculatorService.addCalculation(marriageRegistrationRequest);
 		   }
+		   
+		   /*
+	         * call workflow service if it's enable else uses internal workflow process
+	         */
+	       switch(businessServicefromPath)
+	       {
+	           case businessService_MR:
+	                   wfIntegrator.callWorkFlow(marriageRegistrationRequest);
+	               break;
+	       }
 		   
 		   repository.save(marriageRegistrationRequest);
 		
@@ -85,26 +95,26 @@ public class MarriageRegistrationService {
 
 
     public List<MarriageRegistration> search(MarriageRegistrationSearchCriteria criteria, RequestInfo requestInfo, String serviceFromPath, HttpHeaders headers){
-        List<MarriageRegistration> licenses;
+        List<MarriageRegistration> marriageRegistrations;
 
         criteria.setBusinessService(serviceFromPath);
         enrichmentService.enrichSearchCriteriaWithAccountId(requestInfo,criteria);
          
-             licenses = getLicensesWithOwnerInfo(criteria,requestInfo);
+             marriageRegistrations = getMarriageRegistrationsWithOwnerInfo(criteria,requestInfo);
              
-       return licenses;
+       return marriageRegistrations;
     }
     
 
-    public List<MarriageRegistration> getLicensesWithOwnerInfo(MarriageRegistrationSearchCriteria criteria,RequestInfo requestInfo){
-        List<MarriageRegistration> licenses = repository.getMarriageRegistartions(criteria);
-        if(licenses.isEmpty())
+    public List<MarriageRegistration> getMarriageRegistrationsWithOwnerInfo(MarriageRegistrationSearchCriteria criteria,RequestInfo requestInfo){
+        List<MarriageRegistration> marriageRegistrations = repository.getMarriageRegistartions(criteria);
+        if(marriageRegistrations.isEmpty())
             return Collections.emptyList();
-        return licenses;
+        return marriageRegistrations;
     }
     
 
-    public List<MarriageRegistration> getLicensesWithOwnerInfo(MarriageRegistrationRequest request){
+    public List<MarriageRegistration> getMarriageRegistrationsWithOwnerInfo(MarriageRegistrationRequest request){
     	MarriageRegistrationSearchCriteria criteria = new MarriageRegistrationSearchCriteria();
         List<String> ids = new LinkedList<>();
         request.getMarriageRegistrations().forEach(marriageRegistrations -> {ids.add(marriageRegistrations.getId());});
@@ -113,11 +123,11 @@ public class MarriageRegistrationService {
         criteria.setIds(ids);
         criteria.setBusinessService(request.getMarriageRegistrations().get(0).getBusinessService());
 
-        List<MarriageRegistration> licenses = repository.getMarriageRegistartions(criteria);
+        List<MarriageRegistration> marriageRegistrations = repository.getMarriageRegistartions(criteria);
 
-        if(licenses.isEmpty())
+        if(marriageRegistrations.isEmpty())
             return Collections.emptyList();
-        return licenses;
+        return marriageRegistrations;
     }
     
    /**
@@ -138,7 +148,7 @@ public class MarriageRegistrationService {
             String businessServiceName = marriageRegistartionRequest.getMarriageRegistrations().get(0).getWorkflowCode();
             
             BusinessService businessService = workflowService.getBusinessService(marriageRegistartionRequest.getMarriageRegistrations().get(0).getTenantId(), marriageRegistartionRequest.getRequestInfo(), businessServiceName);
-            List<MarriageRegistration> searchResult = getLicensesWithOwnerInfo(marriageRegistartionRequest);
+            List<MarriageRegistration> searchResult = getMarriageRegistrationsWithOwnerInfo(marriageRegistartionRequest);
             actionValidator.validateUpdateRequest(marriageRegistartionRequest, businessService);
             enrichmentService.enrichMRUpdateRequest(marriageRegistartionRequest, businessService);
             mrValidator.validateUpdate(marriageRegistartionRequest, searchResult);
@@ -163,7 +173,7 @@ public class MarriageRegistrationService {
             
            // userService.createUser(marriageRegistartionRequest, false);
 			
-				calculationService.addCalculation(marriageRegistartionRequest);
+				calculatorService.addCalculation(marriageRegistartionRequest);
 		
             
             repository.update(marriageRegistartionRequest, idToIsStateUpdatableMap);

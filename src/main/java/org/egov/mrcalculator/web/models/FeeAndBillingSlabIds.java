@@ -1,4 +1,4 @@
-package org.egov.mr.web.models.calculation;
+package org.egov.mrcalculator.web.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

@@ -3,6 +3,7 @@ package org.egov.mr.web.models.calculation;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.mrcalculator.web.models.Calculation;
 
 import javax.validation.Valid;
 import java.util.List;

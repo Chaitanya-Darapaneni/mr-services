@@ -72,7 +72,7 @@ public class WorkflowService {
 
     /**
      * Returns boolean value to specifying if the state is updatable
-     * @param stateCode The stateCode of the license
+     * @param stateCode The stateCode of the MarriageRegistrationsItem
      * @param businessService The BusinessService of the application flow
      * @return State object to be fetched
      */

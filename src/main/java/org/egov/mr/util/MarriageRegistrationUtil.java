@@ -66,7 +66,7 @@ public class MarriageRegistrationUtil {
 
 	/**
 	 * Creates a map of id to isStateUpdatable
-	 * @param searchresult Licenses from DB
+	 * @param searchresult marriageRegistrations from DB
 	 * @param businessService The businessService configuration
 	 * @return Map of is to isStateUpdatable
 	 */

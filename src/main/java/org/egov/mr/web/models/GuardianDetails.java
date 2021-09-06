@@ -68,7 +68,7 @@ public class GuardianDetails {
     private AuditDetails auditDetails = null;
 
 	
-	@Size(max=64)
+
     @JsonProperty("groomSideGuardian")
 	private boolean groomSideGuardian ;
 	
