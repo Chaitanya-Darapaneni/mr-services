@@ -44,7 +44,7 @@ public class MRQueryBuilder {
             "mr_createdTime,mrp.id as mrp_id,mrp.locality as mrp_locality,mrc.id as mrc_id,mrc.title as mrc_title,mrc.firstname as mrc_firstName,mrc.middlename as mrc_middleName,mrc.lastname as mrc_lastName," +
             "mrca.id as mrca_id,mrca.addressline1 as mrca_addressLine1,mrca.addressline2 as mrca_addressLine2,mrca.addressline3 as mrca_addressLine3,mrca.country as mrca_country,mrca.state as mrca_state,mrca.district as mrca_district,mrca.pincode as mrca_pincode,mrca.locality as mrca_locality," +
             "mrgd.id as mrgd_id,mrgd.addressline1 as mrgd_addressLine1,mrgd.addressline2 as mrgd_addressLine2,mrgd.addressline3 as mrgd_addressLine3,mrgd.country as mrgd_country,mrgd.state as mrgd_state,mrgd.district as mrgd_district,mrgd.pincode as mrgd_pincode,mrgd.locality as mrgd_locality,mrgd.contact as mrgd_contact," +
-            "mrw.id as mrw_id,mrw.title as mrw_title,mrw.firstname as mrw_firstName,mrw.middlename as mrw_middleName,mrw.lastname as mrw_lastName,mrw.country as mrw_country,mrw.state as mrw_state,mrw.district as mrw_district,mrw.pincode as mrw_pincode,mrw.contact as mrgd_contact," +
+            "mrw.id as mrw_id,mrw.title as mrw_title,mrw.firstname as mrw_firstName,mrw.middlename as mrw_middleName,mrw.lastname as mrw_lastName,mrw.country as mrw_country,mrw.state as mrw_state,mrw.district as mrw_district,mrw.pincode as mrw_pincode,mrw.contact as mrw_contact," +
             "mrapldoc.id as mr_ap_doc_id,mrapldoc.documenttype as mr_ap_doc_documenttype,mrapldoc.filestoreid as mr_ap_doc_filestoreid,mrapldoc.active as mr_ap_doc_active," +
             "mrverdoc.id as mr_ver_doc_id,mrverdoc.documenttype as mr_ver_doc_documenttype,mrverdoc.filestoreid as mr_ver_doc_filestoreid,mrverdoc.active as mr_ver_doc_active FROM eg_mr_application mr " 
             +INNER_JOIN_STRING
@@ -58,9 +58,9 @@ public class MRQueryBuilder {
             +LEFT_OUTER_JOIN_STRING
             +"eg_mr_witness mrw ON mrw.mr_id = mr.id"
             +LEFT_OUTER_JOIN_STRING
-            +"eg_mr_verificationdocument mrverdoc ON mrverdoc.mr_id = mrp.id"
+            +"eg_mr_verificationdocument mrverdoc ON mrverdoc.mr_id = mr.id"
             +LEFT_OUTER_JOIN_STRING
-            +"eg_mr_applicationdocument mrapldoc ON mrapldoc.mr_id = mrp.id";
+            +"eg_mr_applicationdocument mrapldoc ON mrapldoc.mr_id = mr.id";
 
 
       private final String paginationWrapper = "SELECT * FROM " +
@@ -188,6 +188,8 @@ public class MRQueryBuilder {
         preparedStmtList.add(offset);
         preparedStmtList.add(limit+offset);
 
+       log.info("finalQuery  :-  "+finalQuery);
+        
        return finalQuery;
     }
 

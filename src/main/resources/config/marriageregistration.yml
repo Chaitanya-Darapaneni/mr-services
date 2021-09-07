@@ -429,7 +429,7 @@ serviceMaps:
 
           - jsonPath: $.MarriageRegistrations.*.applicationDocuments.*.fileStoreId
 
-          - jsonPath: $.MarriageRegistrations[*][?({id} in @.applicationDocuments[*].id)].marriagePlace.id
+          - jsonPath: $.MarriageRegistrations.[*][?({id} in @.applicationDocuments[*].id)].id
 
           - jsonPath: $.MarriageRegistrations[*][?({id} in @.applicationDocuments[*].id)].auditDetails.createdBy
 
@@ -471,7 +471,7 @@ serviceMaps:
 
           - jsonPath: $.MarriageRegistrations.*.verificationDocuments.*.fileStoreId
 
-          - jsonPath: $.MarriageRegistrations[*][?({id} in @.verificationDocuments[*].id)].marriagePlace.id
+          - jsonPath: $.MarriageRegistrations[*][?({id} in @.verificationDocuments[*].id)].id
 
           - jsonPath: $.MarriageRegistrations[*][?({id} in @.verificationDocuments[*].id)].auditDetails.createdBy
 

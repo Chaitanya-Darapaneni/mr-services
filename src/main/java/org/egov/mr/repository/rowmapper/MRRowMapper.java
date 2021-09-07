@@ -39,6 +39,8 @@ public class MRRowMapper  implements ResultSetExtractor<List<MarriageRegistratio
 
     public List<MarriageRegistration> extractData(ResultSet rs) throws SQLException, DataAccessException {
         Map<String, MarriageRegistration> marriageRegistrationMap = new LinkedHashMap<>();
+        Map<String, Couple> coupleMap = new LinkedHashMap<>();
+        Map<String, Witness> witnessMap = new LinkedHashMap<>();
 
         while (rs.next()) {
             String id = rs.getString("mr_originalId");
@@ -149,7 +151,11 @@ public class MRRowMapper  implements ResultSetExtractor<List<MarriageRegistratio
             		couple.setGuardianDetails(guardianDetails);
             	}
             	
-                currentMarriageRegistration.addCoupleDetailsItem(couple);
+            	if(coupleMap.get(rs.getString("mrc_id")) == null)
+            	{
+            		coupleMap.put(rs.getString("mrc_id"), couple);
+            		currentMarriageRegistration.addCoupleDetailsItem(couple);
+            	}
             }
             
             
@@ -170,8 +176,13 @@ public class MRRowMapper  implements ResultSetExtractor<List<MarriageRegistratio
         				.contact(rs.getString("mrw_contact"))
             			.build();
             	
+            	if(witnessMap.get(rs.getString("mrw_id")) == null)
+            	{
+            		witnessMap.put(rs.getString("mrw_id"), witness);
+            		currentMarriageRegistration.addWitnessItem(witness);
+            	}
             	
-            	currentMarriageRegistration.addWitnessItem(witness);
+            	
             }
             
             
